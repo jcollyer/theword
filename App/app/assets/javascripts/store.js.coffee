@@ -1,6 +1,4 @@
-# http://emberjs.com/guides/models/defining-a-store/
+# app/javascripts/store.js
 
-App.Store = DS.Store.extend
-  revision: 11
-  adapter: DS.RESTAdapter.create()
-
+DS.RESTAdapter.reopen
+  namespace: 'api/v1'
