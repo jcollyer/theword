@@ -8,6 +8,6 @@ class Api::V1::BiblebooksController < ApplicationController
   private
 
   def biblebook_params
-    params.require(:biblebook).permit(:name, :body)
+    params.require(:biblebook).permit(:id, :name, :body)
   end
 end

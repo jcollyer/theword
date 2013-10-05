@@ -1,0 +1,20 @@
+<div class="view_bar">
+  <div class="vew_bar_right">
+    <a href='#' {{action cancel}} class='button'>Cancel</a>
+    <a href='#' {{action save}} class='button'>Create</a>
+  </div>
+</div>
+<div class="form_box">
+  <h1>Create New Bible book</h1>
+  <form enctype="multipart/form-data">
+    <div>
+      <label {{bindAttr for="nameField.elementId"}}>Name</label>
+      {{view Ember.TextField valueBinding='name' name='name' viewName='nameField'}}
+    </div>
+    <div>
+      <label {{bindAttr for="bodyField.elementId"}}>Body</label>
+      {{view Ember.TextField valueBinding='body' name='body' viewName='bodyField'}}
+    </div>
+  </form>
+</div>
+
