@@ -2,10 +2,9 @@ App.BiblebooksIndexRoute = Em.Route.extend
   model: ->
     @get('store').findAll('biblebook')
 
-App.BiblebooksShowRoute = Em.Route.extend
+App.BiblebookRoute = Ember.Route.extend
   model: (params) ->
-    @get('store').find(params.biblebook_id)
-
+    biblebooks.findBy "id", params.biblebook_id
 
 App.BiblebooksNewRoute = Em.Route.extend
   model: ->
