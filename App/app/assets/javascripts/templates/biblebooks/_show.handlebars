@@ -1,0 +1,9 @@
+<h1>{{name}}</h1>
+<p>{{body}}</p>
+<a href='#' {{action 'destroy'}} class="button">Delete</a>
+{{#if isEditing}}
+  {{partial 'biblebooks/edit'}}
+  <button {{action 'doneEditing'}}>Done</button>
+{{else}}
+  <button {{action 'edit'}}>Edit</button>
+{{/if}}
