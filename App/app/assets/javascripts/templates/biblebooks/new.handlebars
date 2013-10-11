@@ -1,7 +1,8 @@
 <div class="form_box">
   <h3>Create New Bible book</h3>
   <form enctype="multipart/form-data">
-    {{partial "biblebooks/edit"}}
+    <p>Name: {{input type="text" value=name}}</p>
+    <p>Body: {{input type="text" value=body}}</p>
   </form>
 </div>
 
