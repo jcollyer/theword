@@ -1,14 +1,14 @@
 // ==========================================================================
 // Project:   Ember Data
-// Copyright: ©2011-2013 Tilde Inc. and contributors.
-//            Portions ©2011 LivingSocial Inc.
+// Copyright: Copyright 2011-2013 Tilde Inc. and contributors.
+//            Portions Copyright 2011 LivingSocial Inc.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
 
 
-// Version: v1.0.0-beta.3-32-gc6a0cc2
-// Last commit: c6a0cc2 (2013-10-04 23:04:14 -0700)
+// Version: v1.0.0-beta.3-56-g8367aa5
+// Last commit: 8367aa5 (2013-10-12 07:56:29 +0300)
 
 
 (function() {
@@ -61,7 +61,7 @@ var define, requireModule;
   @class DS
   @static
 */
-
+var DS;
 if ('undefined' === typeof DS) {
   DS = Ember.Namespace.create({
     VERSION: '1.0.0-beta.2'
@@ -1894,9 +1894,14 @@ DS.Store = Ember.Object.extend(DS._Mappable, {
     If any of a record's properties change, or if it changes state, the
     filter function will be invoked again to determine whether it should
     still be in the array.
+    
+    Optionally you can pass a query which will be triggered at first. The
+    results returned by the server could then appear in the filter if they
+    match the filter function.
 
     @method filter
     @param {Class} type
+    @param {Object} query optional query
     @param {Function} filter
     @return {DS.FilteredRecordArray}
   */
@@ -2169,7 +2174,7 @@ DS.Store = Ember.Object.extend(DS._Mappable, {
     etc.)
 
     @method modelFor
-    @param {String} key
+    @param {String or subclass of DS.Model} key
     @returns {subclass of DS.Model}
   */
   modelFor: function(key) {
@@ -2526,6 +2531,7 @@ function normalizeRelationships(store, type, data, record) {
       deserializeRecordId(store, data, key, relationship, value);
     } else if (kind === 'hasMany') {
       deserializeRecordIds(store, data, key, relationship, value);
+      addUnsavedRecords(record, key, value);
     }
   });
 
@@ -2559,6 +2565,14 @@ function typeFor(relationship, key, data) {
 function deserializeRecordIds(store, data, key, relationship, ids) {
   for (var i=0, l=ids.length; i<l; i++) {
     deserializeRecordId(store, ids, i, relationship, ids[i]);
+  }
+}
+
+// If there are any unsaved records that are in a hasMany they won't be
+// in the payload, so add them back in manually.
+function addUnsavedRecords(record, key, data) {
+  if(record) {
+    data.pushObjects(record.get(key).filterBy('isNew'));
   }
 }
 
@@ -3274,7 +3288,7 @@ var RootState = {
 
       didCommit: function(record) {
         record.send('invokeLifecycleCallbacks', get(record, 'lastDirtyType'));
-      },
+      }
 
     },
 
@@ -3600,6 +3614,8 @@ DS.Model = Ember.Object.extend(Ember.Evented, {
     for (i=0, l=setups.length; i<l; i++) {
       setups[i].setup(this);
     }
+
+    this.updateRecordArraysLater();
   },
 
   _unhandledEvent: function(state, name, context) {
@@ -5813,7 +5829,7 @@ DS.FixtureAdapter = DS.Adapter.extend({
   },
 
   /**
-    Implement this method in order to provide provide json for CRUD methods
+    Implement this method in order to provide json for CRUD methods
 
     @method mockJSON
     @param  type
@@ -7420,26 +7436,6 @@ DS.Model.reopen({
 
 
 (function() {
-//Copyright (C) 2011 by Living Social, Inc.
-
-//Permission is hereby granted, free of charge, to any person obtaining a copy of
-//this software and associated documentation files (the "Software"), to deal in
-//the Software without restriction, including without limitation the rights to
-//use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-//of the Software, and to permit persons to whom the Software is furnished to do
-//so, subject to the following conditions:
-
-//The above copyright notice and this permission notice shall be included in all
-//copies or substantial portions of the Software.
-
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//SOFTWARE.
-
 /**
   Ember Data
 

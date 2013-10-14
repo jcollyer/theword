@@ -2,3 +2,60 @@
   {{#link-to "biblebooks"}}Biblebooks{{/link-to}}
   {{ outlet }}
 </script>
+
+<script type="text/x-handlebars" id="biblebooks/index">
+  <p>Biblebooks</p>
+</script>
+
+<script type="text/x-handlebars" id="biblebooks">
+  <table>
+    <thead>
+    <tr>
+      <th>biblebooks
+        {{#linkTo "biblebooks.new" class="btn"}}+ Add Biblebook{{/linkTo}}
+      </th>
+    </tr>
+    </thead>
+    {{#each biblebook}}
+    <tr>
+      <td>
+        {{#linkTo biblebook biblebook}}{{name}}
+        <small>{{body}}</small>
+        {{/linkTo}}
+      </td>
+    </tr>
+    {{/each}}
+  </table>
+
+  {{outlet}}
+</script>
+
+<script type="text/x-handlebars" id="biblebook">
+  {{#if isEditing}}
+  {{partial 'biblebook/edit'}}
+  <button {{action 'doneEditing'}} class='btn'>Done</button>
+  {{else}}
+  <button {{action 'edit'}} class='btn'>Edit</button>
+  <button {{action 'delete'}} class='btn'>Delete</button>
+  {{/if}}
+  {{partial 'biblebook/view'}}
+</script>
+
+<script type="text/x-handlebars" id="biblebooks/new">
+  <legend>Create Biblebook</legend>
+  {{partial 'biblebook/edit'}}
+  <button {{action 'save'}} class='btn'>Create</button>
+  <button {{action cancel}} class='btn'>Cancel</button>
+  {{partial 'biblebook/view'}}
+</script>
+
+
+<script type="text/x-handlebars" id="biblebook/_view">
+  <h1>{{name}}</h1>
+  <h4>{{body}}</h4>
+</script>
+
+<script type="text/x-handlebars" id="biblebook/_edit">
+  <p>Name: {{view Ember.TextField valueBinding='name'}}</p>
+  <p>Body: {{view Ember.TextArea valueBinding='body'}}</p>
+</script>
